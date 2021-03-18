@@ -1,0 +1,105 @@
+import pygame
+import random
+import os
+from pygame import mixer
+
+WIDTH,HEIGHT=900,500
+WIN=pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Math Game")
+WHITE= (255,255,255)
+number = random.randint(1000, 10000000)
+FPS= 60
+mouse= pygame.mouse.get_pos()
+click= pygame.mouse.get_pressed()
+
+NUMBER_IMAGE_0= pygame.image.load(os.path.join('Assets','Numbers_0.png'))
+NUMBER_IMAGE_1= pygame.image.load(os.path.join('Assets','Numbers_1.png'))
+NUMBER_IMAGE_2= pygame.image.load(os.path.join('Assets','Numbers_2.png'))
+NUMBER_IMAGE_3= pygame.image.load(os.path.join('Assets','Numbers_3.png'))
+NUMBER_IMAGE_4= pygame.image.load(os.path.join('Assets','Numbers_4.png'))
+NUMBER_IMAGE_5= pygame.image.load(os.path.join('Assets','Numbers_5.png'))
+NUMBER_IMAGE_6= pygame.image.load(os.path.join('Assets','Numbers_6.png'))
+NUMBER_IMAGE_7= pygame.image.load(os.path.join('Assets','Numbers_7.png'))
+NUMBER_IMAGE_8= pygame.image.load(os.path.join('Assets','Numbers_8.png'))
+NUMBER_IMAGE_9= pygame.image.load(os.path.join('Assets','Numbers_9.png'))
+
+NUMBER_IMAGE_0=pygame.transform.scale(NUMBER_IMAGE_0,(75,60))
+NUMBER_IMAGE_1=pygame.transform.scale(NUMBER_IMAGE_1,(75,60))
+NUMBER_IMAGE_2=pygame.transform.scale(NUMBER_IMAGE_2,(75,60))
+NUMBER_IMAGE_3=pygame.transform.scale(NUMBER_IMAGE_3,(75,60))
+NUMBER_IMAGE_4=pygame.transform.scale(NUMBER_IMAGE_4,(75,60))
+NUMBER_IMAGE_5=pygame.transform.scale(NUMBER_IMAGE_5,(75,60))
+NUMBER_IMAGE_6=pygame.transform.scale(NUMBER_IMAGE_6,(75,60))
+NUMBER_IMAGE_7=pygame.transform.scale(NUMBER_IMAGE_7,(75,60))
+NUMBER_IMAGE_8=pygame.transform.scale(NUMBER_IMAGE_8,(75,60))
+NUMBER_IMAGE_9=pygame.transform.scale(NUMBER_IMAGE_9,(75,60))
+
+def draw_window():
+    WIN.fill(WHITE)
+    if 
+        random()
+
+
+    pygame.display.update()
+
+        #mouse = pygame.mouse.get_pos()
+        #click = pygame.mouse.get_pressed()
+        #if click[0] == 1:
+
+
+def numbers(number):
+    numb = str(number)
+    spot1 = 200
+    spot2 = 200
+    index = len(numb)
+    for i in range(index):
+        if numb[i] == '0':
+            WIN.blit(NUMBER_IMAGE_0, (spot1, spot2))
+        elif numb[i] == '1':
+            WIN.blit(NUMBER_IMAGE_1, (spot1, spot2))
+        elif numb[i] == '2':
+            WIN.blit(NUMBER_IMAGE_2, (spot1, spot2))
+        elif numb[i] == '3':
+            WIN.blit(NUMBER_IMAGE_3, (spot1, spot2))
+        elif numb[i] == '4':
+            WIN.blit(NUMBER_IMAGE_4, (spot1, spot2))
+        elif numb[i] == '5':
+            WIN.blit(NUMBER_IMAGE_5, (spot1, spot2))
+        elif numb[i] == '6':
+            WIN.blit(NUMBER_IMAGE_6, (spot1, spot2))
+        elif numb[i] == '7':
+            WIN.blit(NUMBER_IMAGE_7, (spot1, spot2))
+        elif numb[i] == '8':
+            WIN.blit(NUMBER_IMAGE_8, (spot1, spot2))
+        else:
+            WIN.blit(NUMBER_IMAGE_9, (spot1, spot2))
+
+        spot1 += 60
+
+
+def random():
+    import random
+    number = random.randint(1000, 10000000)
+    numbers(number)
+
+def main():
+    clock= pygame.time.Clock()
+
+
+    run = True
+    while run:
+        clock.tick(FPS)
+
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+        draw_window()
+
+            
+    pygame.quit()
+
+if __name__ ==  "__main__":
+    main()
+
+
