@@ -9,6 +9,7 @@ pygame.display.set_caption("Math Game")
 WHITE= (255,255,255)
 number = random.randint(1000, 10000000)
 FPS= 60
+new_game=True
 mouse= pygame.mouse.get_pos()
 click= pygame.mouse.get_pressed()
 
@@ -36,7 +37,7 @@ NUMBER_IMAGE_9=pygame.transform.scale(NUMBER_IMAGE_9,(75,60))
 
 def draw_window():
     WIN.fill(WHITE)
-    if 
+    if new_game==True: 
         random()
 
 
