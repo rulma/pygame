@@ -1,104 +1,315 @@
 import pygame
 import random
 import os
-from pygame import mixer
-
-WIDTH,HEIGHT=900,500
-WIN=pygame.display.set_mode((WIDTH, HEIGHT))
+from pygame import mixer, MOUSEBUTTONDOWN, MOUSEBUTTONUP
+pygame.init()
+pygame.font.init()
+WIDTH, HEIGHT = 900, 500
+WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Math Game")
-WHITE= (255,255,255)
-number = random.randint(1000, 10000000)
-FPS= 60
-mouse= pygame.mouse.get_pos()
-click= pygame.mouse.get_pressed()
+WHITE = (255, 255, 255)
+NUMBER_WIDTH,NUMBER_HEIGHT= 75,60
+FPS = 60
+index=0
+spot1 = 200
+spot2 = 200
+click = pygame.mouse.get_pressed()
+mx,my=pygame.mouse.get_pos()
 
-NUMBER_IMAGE_0= pygame.image.load(os.path.join('Assets','Numbers_0.png'))
-NUMBER_IMAGE_1= pygame.image.load(os.path.join('Assets','Numbers_1.png'))
-NUMBER_IMAGE_2= pygame.image.load(os.path.join('Assets','Numbers_2.png'))
-NUMBER_IMAGE_3= pygame.image.load(os.path.join('Assets','Numbers_3.png'))
-NUMBER_IMAGE_4= pygame.image.load(os.path.join('Assets','Numbers_4.png'))
-NUMBER_IMAGE_5= pygame.image.load(os.path.join('Assets','Numbers_5.png'))
-NUMBER_IMAGE_6= pygame.image.load(os.path.join('Assets','Numbers_6.png'))
-NUMBER_IMAGE_7= pygame.image.load(os.path.join('Assets','Numbers_7.png'))
-NUMBER_IMAGE_8= pygame.image.load(os.path.join('Assets','Numbers_8.png'))
-NUMBER_IMAGE_9= pygame.image.load(os.path.join('Assets','Numbers_9.png'))
 
-NUMBER_IMAGE_0=pygame.transform.scale(NUMBER_IMAGE_0,(75,60))
-NUMBER_IMAGE_1=pygame.transform.scale(NUMBER_IMAGE_1,(75,60))
-NUMBER_IMAGE_2=pygame.transform.scale(NUMBER_IMAGE_2,(75,60))
-NUMBER_IMAGE_3=pygame.transform.scale(NUMBER_IMAGE_3,(75,60))
-NUMBER_IMAGE_4=pygame.transform.scale(NUMBER_IMAGE_4,(75,60))
-NUMBER_IMAGE_5=pygame.transform.scale(NUMBER_IMAGE_5,(75,60))
-NUMBER_IMAGE_6=pygame.transform.scale(NUMBER_IMAGE_6,(75,60))
-NUMBER_IMAGE_7=pygame.transform.scale(NUMBER_IMAGE_7,(75,60))
-NUMBER_IMAGE_8=pygame.transform.scale(NUMBER_IMAGE_8,(75,60))
-NUMBER_IMAGE_9=pygame.transform.scale(NUMBER_IMAGE_9,(75,60))
+bg=pygame.image.load(os.path.join('Assets','numbers_background.jpg'))
+NUMBER_IMAGE_0 = pygame.image.load(os.path.join('Assets', 'Numbers_0.png'))
+NUMBER_IMAGE_1 = pygame.image.load(os.path.join('Assets', 'Numbers_1.png'))
+NUMBER_IMAGE_2 = pygame.image.load(os.path.join('Assets', 'Numbers_2.png'))
+NUMBER_IMAGE_3 = pygame.image.load(os.path.join('Assets', 'Numbers_3.png'))
+NUMBER_IMAGE_4 = pygame.image.load(os.path.join('Assets', 'Numbers_4.png'))
+NUMBER_IMAGE_5 = pygame.image.load(os.path.join('Assets', 'Numbers_5.png'))
+NUMBER_IMAGE_6 = pygame.image.load(os.path.join('Assets', 'Numbers_6.png'))
+NUMBER_IMAGE_7 = pygame.image.load(os.path.join('Assets', 'Numbers_7.png'))
+NUMBER_IMAGE_8 = pygame.image.load(os.path.join('Assets', 'Numbers_8.png'))
+NUMBER_IMAGE_9 = pygame.image.load(os.path.join('Assets', 'Numbers_9.png'))
+new_game=True
+NUMBER_IMAGE_0 = pygame.transform.scale(NUMBER_IMAGE_0, (NUMBER_WIDTH, NUMBER_HEIGHT))
+NUMBER_IMAGE_1 = pygame.transform.scale(NUMBER_IMAGE_1, (NUMBER_WIDTH, NUMBER_HEIGHT))
+NUMBER_IMAGE_2 = pygame.transform.scale(NUMBER_IMAGE_2, (NUMBER_WIDTH, NUMBER_HEIGHT))
+NUMBER_IMAGE_3 = pygame.transform.scale(NUMBER_IMAGE_3, (NUMBER_WIDTH, NUMBER_HEIGHT))
+NUMBER_IMAGE_4 = pygame.transform.scale(NUMBER_IMAGE_4, (NUMBER_WIDTH, NUMBER_HEIGHT))
+NUMBER_IMAGE_5 = pygame.transform.scale(NUMBER_IMAGE_5, (NUMBER_WIDTH, NUMBER_HEIGHT))
+NUMBER_IMAGE_6 = pygame.transform.scale(NUMBER_IMAGE_6, (NUMBER_WIDTH, NUMBER_HEIGHT))
+NUMBER_IMAGE_7 = pygame.transform.scale(NUMBER_IMAGE_7, (NUMBER_WIDTH, NUMBER_HEIGHT))
+NUMBER_IMAGE_8 = pygame.transform.scale(NUMBER_IMAGE_8, (NUMBER_WIDTH, NUMBER_HEIGHT))
+NUMBER_IMAGE_9 = pygame.transform.scale(NUMBER_IMAGE_9, (NUMBER_WIDTH, NUMBER_HEIGHT))
+bg=pygame.transform.scale(bg, (WIDTH, HEIGHT))
+
+SELECT_FONT = pygame.font.SysFont('cambriacambriamath', 40)
+col_dict = {}
+zero=pygame.image.load(os.path.join('Assets', 'Numbers_0.png'))
+pygame.display.set_icon(zero)
+pygame.display.set_caption("Math Game")
+level = False
+rand = False
+level_dict={}
+level_n=0
+collision=['']
+num_list=['']
+pygame.mouse.set_visible(1)
+menu_font = pygame.font.SysFont('vivaldi' , 40)
+class Option:
+    hovered = False
+
+    def __init__(self, text, pos):
+        self.text = text
+        self.pos = pos
+        self.set_rect()
+        self.draw()
+
+    def draw(self):
+        self.set_rend()
+        WIN.blit(self.rend, self.rect)
+
+    def set_rend(self):
+        self.rend = menu_font.render(self.text, True, self.get_color())
+
+    def get_color(self):
+        if self.hovered:
+            return (255, 255, 255)
+        else:
+            return (0, 0,255 )
+
+    def set_rect(self):
+        self.set_rend()
+        self.rect = self.rend.get_rect()
+        self.rect.topleft = self.pos
 
 def draw_window():
-    WIN.fill(WHITE)
-    random()
 
+    WIN.blit(bg, (0, 0))
 
-    pygame.display.update()
-
-        #mouse = pygame.mouse.get_pos()
-        #click = pygame.mouse.get_pressed()
-        #if click[0] == 1:
-
+    global new_game
+    if new_game:
+        set_random()
+        popdict()
+        new_game=False
+        pygame.display.update()
+def selected(number):
+    global spot1,spot2
+    spot1 = 200
+    spot2 = 200
+    for i in range(index):
+        if number[i] == 0:
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_0, (collision[i].x, collision[i].y))
+            num_list[i]=0
+        elif number[i] == 1:
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_1, (collision[i].x, collision[i].y))
+            num_list[i] = 1
+        elif number[i] == 2:
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_2, (collision[i].x, collision[i].y))
+            num_list[i] = 2
+        elif number[i] == 3:
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_3, (collision[i].x, collision[i].y))
+            num_list[i] = 3
+        elif number[i] == 4:
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_4, (collision[i].x, collision[i].y))
+            num_list[i] = 4
+        elif number[i] == 5:
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_5, (collision[i].x, collision[i].y))
+            num_list[i] = 5
+        elif number[i] == 6:
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_6, (collision[i].x, collision[i].y))
+            num_list[i] = 6
+        elif number[i] == 7:
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_7, (collision[i].x, collision[i].y))
+            num_list[i] = 7
+        elif number[i] == 8:
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_8, (collision[i].x, collision[i].y))
+            num_list[i] = 8
+        else:
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_9, (collision[i].x, collision[i].y))
+            num_list[i] = 9
+        spot2 += 70
 
 def numbers(number):
     numb = str(number)
+    global spot1
+    global spot2
+    global index
+    global col_dict
     spot1 = 200
     spot2 = 200
     index = len(numb)
+    global collision
+    collision=['']*index
+    global num_list
+    num_list=['']*index
+
     for i in range(index):
         if numb[i] == '0':
-            WIN.blit(NUMBER_IMAGE_0, (spot1, spot2))
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_0, (collision[i].x, collision[i].y))
+            num_list[i]=0
+
         elif numb[i] == '1':
-            WIN.blit(NUMBER_IMAGE_1, (spot1, spot2))
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_1, (collision[i].x, collision[i].y))
+            num_list[i] = 1
         elif numb[i] == '2':
-            WIN.blit(NUMBER_IMAGE_2, (spot1, spot2))
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_2, (collision[i].x, collision[i].y))
+            num_list[i] = 2
         elif numb[i] == '3':
-            WIN.blit(NUMBER_IMAGE_3, (spot1, spot2))
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_3, (collision[i].x, collision[i].y))
+            num_list[i] = 3
         elif numb[i] == '4':
-            WIN.blit(NUMBER_IMAGE_4, (spot1, spot2))
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_4, (collision[i].x, collision[i].y))
+            num_list[i] = 4
         elif numb[i] == '5':
-            WIN.blit(NUMBER_IMAGE_5, (spot1, spot2))
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_5, (collision[i].x, collision[i].y))
+            num_list[i] = 5
         elif numb[i] == '6':
-            WIN.blit(NUMBER_IMAGE_6, (spot1, spot2))
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_6, (collision[i].x, collision[i].y))
+            num_list[i] = 6
         elif numb[i] == '7':
-            WIN.blit(NUMBER_IMAGE_7, (spot1, spot2))
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_7, (collision[i].x, collision[i].y))
+            num_list[i] = 7
         elif numb[i] == '8':
-            WIN.blit(NUMBER_IMAGE_8, (spot1, spot2))
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_8, (collision[i].x, collision[i].y))
+            num_list[i] = 8
         else:
-            WIN.blit(NUMBER_IMAGE_9, (spot1, spot2))
+            collision[i] = pygame.Rect(spot2, spot1, NUMBER_WIDTH, NUMBER_HEIGHT)
+            WIN.blit(NUMBER_IMAGE_9, (collision[i].x, collision[i].y))
+            num_list[i] = 9
+        spot2 += 70
 
-        spot1 += 60
 
 
-def random():
+
+
+
+def set_random():
     import random
     number = random.randint(1000, 10000000)
     numbers(number)
+def popdict():
+    num=len(num_list)
+    for i in range(num):
+        col_dict[i] = False
+
 
 def main():
-    clock= pygame.time.Clock()
-
-
+    clock = pygame.time.Clock()
+    global collision
+    global index
+    global num_list
     run = True
+    global col_dict
+    select = []
+
     while run:
+        WIN.blit(bg, (0, 0))
         clock.tick(FPS)
 
-
         for event in pygame.event.get():
+            s = pygame.Surface((NUMBER_WIDTH, NUMBER_HEIGHT))  # the size of your rect
+            s.set_alpha(120)
+            s.fill((0, 255, 255))  # this fills the entire surface
+
             if event.type == pygame.QUIT:
                 run = False
+            if event.type == MOUSEBUTTONDOWN:
+
+
+
+
+                if pygame.mouse.get_pressed()[0]:
+
+
+                    selected(num_list)
+                    for i in range(index):
+                        if collision[i].collidepoint(pygame.mouse.get_pos()):
+                            #WIN.blit(s,(collision[i].x,collision[i].y))
+                            #num=str(num_list[i])
+                            value=len(select)
+                            #select_font_text = SELECT_FONT.render('you have selected: '+ num,1,WHITE)
+                            #WIN.blit(select_font_text, (10, 10))
+                            if col_dict.get(i)==False:
+                                if value==0:
+                                    select.append(i)
+                                    col_dict[i]=True
+                                else:
+                                    if i==0:
+                                        j=1
+                                        if j in select:
+                                            select.append(i)
+                                            col_dict[i] = True
+                                    else:
+                                        h=i-1
+                                        j=i+1
+                                        if h in select or j in select:
+                                            select.append(i)
+                                            col_dict[i] = True
+
+                            else:
+                                select.remove(i)
+                                col_dict[i]=False
+                                h=i-1
+                                j=i+1
+                                if h in select and j in select:
+                                    select.clear()
+                                    popdict()
+
+
+
+                    select.sort()
+                    print(select)
+                    num=''
+                    for i in select:
+                        num+=str(num_list[i])
+                    if num:
+                        number = int(num)
+
+                        select_font_text = SELECT_FONT.render('you have selected: '+ num,1,WHITE)
+                        WIN.blit(select_font_text, (10, 10))
+                        if number % 2 == 0:
+                            DIVIDE = pygame.image.load(os.path.join('Assets', 'Numbers_D.png'))
+                            MUL = pygame.image.load(os.path.join('Assets', 'Numbers_X.png'))
+                            DIVIDE=pygame.transform.scale(DIVIDE, (35, 35))
+                            MUL=pygame.transform.scale(MUL, (35, 35))
+                            MUL_RECT=pygame.Rect(450,15 , 20, 20)
+                            DIV_RECT= pygame.Rect(475,15 , 20, 20)
+                            WIN.blit(DIVIDE,(DIV_RECT.x,DIV_RECT.y))
+                            WIN.blit(MUL,(MUL_RECT.x,MUL_RECT.y))
+
+                        else:
+                            MUL = pygame.image.load(os.path.join('Assets', 'Numbers_X.png'))
+                            MUL = pygame.transform.scale(MUL, (35, 35))
+                            MUL_RECT = pygame.Rect(455, 15, 20, 20)
+                            WIN.blit(MUL, (MUL_RECT.x, MUL_RECT.y))
+                        print(col_dict)
+                        pygame.display.update()
+
+
         draw_window()
 
-            
+
     pygame.quit()
 
-if __name__ ==  "__main__":
-    main()
 
+if __name__ == "__main__":
+    main()
 
