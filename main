@@ -47,7 +47,7 @@ zero=pygame.image.load(os.path.join('Assets', 'Numbers_0.png'))
 pygame.display.set_icon(zero)
 pygame.display.set_caption("Math Game")
 level = False
-rand = False
+rand = True
 level_dict={}
 level_n=0
 collision=['']
@@ -80,17 +80,14 @@ class Option:
         self.set_rend()
         self.rect = self.rend.get_rect()
         self.rect.topleft = self.pos
+options = [Option("Start Game", (200, 300)), Option("Random Number", (200, 350))]
 
 def draw_window():
 
     WIN.blit(bg, (0, 0))
 
-    global new_game
-    if new_game:
-        set_random()
-        popdict()
-        new_game=False
-        pygame.display.update()
+
+
 def selected(number):
     global spot1,spot2
     spot1 = 200
@@ -211,7 +208,7 @@ def popdict():
         col_dict[i] = False
 
 
-def main():
+def game():
     clock = pygame.time.Clock()
     global collision
     global index
@@ -225,7 +222,6 @@ def main():
         clock.tick(FPS)
 
         for event in pygame.event.get():
-         
 
             if event.type == pygame.QUIT:
                 run = False
@@ -240,11 +236,9 @@ def main():
                     selected(num_list)
                     for i in range(index):
                         if collision[i].collidepoint(pygame.mouse.get_pos()):
-                            #WIN.blit(s,(collision[i].x,collision[i].y))
-                            #num=str(num_list[i])
+
                             value=len(select)
-                            #select_font_text = SELECT_FONT.render('you have selected: '+ num,1,WHITE)
-                            #WIN.blit(select_font_text, (10, 10))
+
                             if col_dict.get(i)==False:
                                 if value==0:
                                     select.append(i)
@@ -302,11 +296,32 @@ def main():
                         pygame.display.update()
 
 
-        draw_window()
+
 
 
     pygame.quit()
-
+def main():
+    draw_window()
+    for option in options:
+        if option.rect.collidepoint(pygame.mouse.get_pos()):
+            option.hovered = True
+        else:
+            option.hovered = False
+        option.draw()
+    pygame.display.update()
+    menu=True
+    global rand
+    rand=False
+    while menu:
+        if options[1].rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+            rand=True
+            menu=False
+    if rand:
+        set_random()
+        rand=False
+    popdict()
+    pygame.display.update()
+    game()
 
 if __name__ == "__main__":
     main()
