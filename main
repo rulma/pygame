@@ -225,9 +225,7 @@ def main():
         clock.tick(FPS)
 
         for event in pygame.event.get():
-            s = pygame.Surface((NUMBER_WIDTH, NUMBER_HEIGHT))  # the size of your rect
-            s.set_alpha(120)
-            s.fill((0, 255, 255))  # this fills the entire surface
+         
 
             if event.type == pygame.QUIT:
                 run = False
