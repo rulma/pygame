@@ -202,6 +202,11 @@ def set_random():
     import random
     number = random.randint(1000, 10000000)
     numbers(number)
+def set_level(num):
+    global level_dict
+
+    number = level_dict.get(num)
+    numbers(number)
 def popdict():
     num=len(num_list)
     for i in range(num):
@@ -310,15 +315,24 @@ def main():
         option.draw()
     pygame.display.update()
     menu=True
+    num=False
     global rand
     rand=False
     while menu:
-        if options[1].rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+        if options[0].rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+            num=True
+            menu=False
+        elif options[1].rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
             rand=True
             menu=False
+        else:
+            menu=True
     if rand:
         set_random()
         rand=False
+    if num:
+        pass
+
     popdict()
     pygame.display.update()
     game()
